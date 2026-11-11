@@ -1,0 +1,8 @@
+# Read by openapi-generator-cli during `generateClient`: files listed here are
+# never written.
+#
+# A schema the spec declares but no operation references: the raw
+# `application/octet-stream` body of `PUT /2/compliance/jobs/{id}/upload`,
+# which ComplianceApi sends as a plain `java.io.File` anyway. As a model it
+# would need a JSON codec for `java.io.File`, which has no meaning.
+src/main/scala/com/github/unknownnpc/scalaxcom/generated/model/UploadComplianceJobSubmissionRequest.scala

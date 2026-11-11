@@ -1,0 +1,1 @@
+{{#allParams}}{{paramName}}: {{#required}}{{dataType}}{{/required}}{{^required}}{{#isContainer}}{{dataType}} = {{#isArray}}{{#uniqueItems}}Set.empty{{/uniqueItems}}{{^uniqueItems}}Seq.empty{{/uniqueItems}}{{/isArray}}{{#isMap}}Map.empty{{/isMap}}{{/isContainer}}{{^isContainer}}Option[{{dataType}}] = None{{/isContainer}}{{/required}}{{^-last}}, {{/-last}}{{/allParams}}

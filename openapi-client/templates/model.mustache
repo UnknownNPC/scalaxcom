@@ -1,0 +1,85 @@
+{{>licenseInfo}}
+package {{package}}
+
+{{#imports}}
+import {{import}}
+{{/imports}}
+{{#circe}}
+import io.circe.{Decoder, Encoder}
+import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
+import {{invokerPackage}}.AdditionalTypeSerializers.given
+import {{invokerPackage}}.DateSerializers.given
+{{/circe}}
+
+{{#models}}
+{{#model}}
+{{#description}}
+{{#javadocRenderer}}
+{{#title}}
+{{{.}}}
+{{/title}}
+{{{description}}}
+{{/javadocRenderer}}
+{{/description}}
+{{^isEnum}}
+{{#circe}}
+object {{classname}} {
+  // Each field's JSON name exactly as the spec spells it (`baseName`), so no
+  // naming convention has to guess it (circe's snake_case would turn
+  // `playback0Count` into `playback0_count`, not the API's `playback_0_count`).
+  given jsonNamingConfiguration: io.circe.derivation.Configuration =
+    io.circe.derivation.Configuration.default.withTransformMemberNames(
+      Map[String, String]({{#vars}}"{{name}}" -> "{{baseName}}"{{^-last}}, {{/-last}}{{/vars}}).withDefault(identity)
+    )
+}
+{{/circe}}
+case class {{classname}}(
+  {{#vars}}
+  {{#description}}
+  /* {{{.}}} */
+  {{/description}}
+  {{{name}}}: {{^required}}Option[{{/required}}{{^isEnum}}{{dataType}}{{/isEnum}}{{#isEnum}}{{^isArray}}{{classname}}Enums.{{datatypeWithEnum}}{{/isArray}}{{#isArray}}Seq[{{classname}}Enums.{{datatypeWithEnum}}]{{/isArray}}{{/isEnum}}{{^required}}] = None{{/required}}{{^-last}},{{/-last}}
+  {{/vars}}
+){{#circe}} derives ConfiguredDecoder, ConfiguredEncoder{{/circe}}
+{{/isEnum}}
+
+{{#isEnum}}
+object {{classname}} extends Enumeration {
+    type {{classname}} = {{classname}}.Value
+{{#allowableValues}}
+    {{#values}}
+    val {{#fnEnumEntry}}{{.}}{{/fnEnumEntry}} = Value("{{.}}")
+    {{/values}}
+{{/allowableValues}}
+}
+{{#circe}}
+given Decoder[{{classname}}.{{classname}}] = Decoder.decodeEnumeration({{classname}})
+given Encoder[{{classname}}.{{classname}}] = Encoder.encodeEnumeration({{classname}})
+{{/circe}}
+{{/isEnum}}
+{{#hasEnums}}
+object {{classname}}Enums {
+
+  {{#vars}}
+  {{#isEnum}}
+  type {{datatypeWithEnum}} = {{datatypeWithEnum}}.Value
+  {{/isEnum}}
+  {{/vars}}
+  {{#vars}}
+  {{#isEnum}}
+  object {{datatypeWithEnum}} extends Enumeration {
+{{#_enum}}
+    val {{#fnEnumEntry}}{{.}}{{/fnEnumEntry}} = Value("{{.}}")
+{{/_enum}}
+  }
+{{#circe}}
+  given Decoder[{{datatypeWithEnum}}] = Decoder.decodeEnumeration({{datatypeWithEnum}})
+  given Encoder[{{datatypeWithEnum}}] = Encoder.encodeEnumeration({{datatypeWithEnum}})
+{{/circe}}
+
+  {{/isEnum}}
+  {{/vars}}
+}
+{{/hasEnums}}
+{{/model}}
+{{/models}}
