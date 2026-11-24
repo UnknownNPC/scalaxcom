@@ -11,6 +11,7 @@
  */
 package com.github.unknownnpc.scalaxcom.generated.model
 
+import io.circe.Json
 import io.circe.{Decoder, Encoder}
 import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.scalaxcom.generated.core.AdditionalTypeSerializers.given
@@ -26,10 +27,12 @@ object UpdateUserBroadcastStateRequest {
     )
 }
 case class UpdateUserBroadcastStateRequest(
-  chatOption: Option[UpdateUserBroadcastStateRequestChatOption] = None,
+  /* Who can chat: 0 default, 1 chat off, 2 everyone, 3 verified accounts, 4 accounts the host follows, 5 the host's subscribers, 6 accounts followed by an account the host follows. A numeric string is also accepted. `PUBLISH` only. */
+  chatOption: Option[io.circe.Json] = None,
   /* Broadcast language. `PUBLISH` only. */
   locale: Option[String] = None,
-  shouldNotTweet: Option[UpdateUserBroadcastStateRequestShouldNotTweet] = None,
+  /* Skip the announcing Post. Unset keeps the broadcast's setting, which defaults to posting. `\"true\"`, `\"false\"`, `1` and `0` are also accepted. `PUBLISH` only. */
+  shouldNotTweet: Option[io.circe.Json] = None,
   /* `PUBLISH` or `END`. */
   state: String,
   /* Broadcast title. `PUBLISH` only. */

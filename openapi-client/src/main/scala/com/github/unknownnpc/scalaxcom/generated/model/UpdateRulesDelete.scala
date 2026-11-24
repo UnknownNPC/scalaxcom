@@ -11,6 +11,7 @@
  */
 package com.github.unknownnpc.scalaxcom.generated.model
 
+import io.circe.Json
 import io.circe.{Decoder, Encoder}
 import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.scalaxcom.generated.core.AdditionalTypeSerializers.given
@@ -27,7 +28,7 @@ object UpdateRulesDelete {
 }
 case class UpdateRulesDelete(
   /* Rule ids (Snowflake external ids) to delete. */
-  ids: Option[Seq[UpdateRulesDeleteIdsInner]] = None,
+  ids: Option[Seq[io.circe.Json]] = None,
   /* Rule values to delete. */
   values: Option[Seq[String]] = None
 ) derives ConfiguredDecoder, ConfiguredEncoder

@@ -26,7 +26,8 @@ object AppendMediaUploadRequest {
     )
 }
 case class AppendMediaUploadRequest(
-  media: AppendMediaUploadRequestMedia,
+  /* One segment of the file: base64-encoded in JSON bodies, raw bytes in multipart bodies. */
+  media: String,
   /* The segment's position in the file, counting from 0. */
   segmentIndex: Int
 ) derives ConfiguredDecoder, ConfiguredEncoder

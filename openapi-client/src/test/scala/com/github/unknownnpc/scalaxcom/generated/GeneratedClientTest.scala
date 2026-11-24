@@ -5,12 +5,18 @@ import java.time.OffsetDateTime
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
+import com.github.unknownnpc.scalaxcom.generated.api.MediaApi
 import com.github.unknownnpc.scalaxcom.generated.api.PostsApi
 import com.github.unknownnpc.scalaxcom.generated.api.UsersApi
 import com.github.unknownnpc.scalaxcom.generated.core.JsonSupport.SecurityTag
+import com.github.unknownnpc.scalaxcom.generated.model.AppendMediaUploadRequest
+import com.github.unknownnpc.scalaxcom.generated.model.CreateUserBroadcastRequest
 import com.github.unknownnpc.scalaxcom.generated.model.GetPostsByIdResponse
 import com.github.unknownnpc.scalaxcom.generated.model.MediaOrganicMetrics
+import com.github.unknownnpc.scalaxcom.generated.model.PostReferencedPostsInner
+import com.github.unknownnpc.scalaxcom.generated.model.PostReferencedPostsInnerEnums
 
+import io.circe.Json
 import io.circe.parser.decode
 import io.circe.syntax.*
 
@@ -51,5 +57,37 @@ class GeneratedClientTest extends AnyFlatSpec with Matchers {
     metrics.playback0Count shouldBe Some(5L)
     metrics.playback100Count shouldBe Some(1L)
     metrics.asJson.noSpaces should include("\"playback_0_count\":5")
+  }
+
+  // ScalarCompositionSpecFix: a union of scalars is a plain value, not an empty model.
+  "a union of scalars" should "carry an upload segment as base64 text" in {
+    val request = MediaApi.appendMediaUpload(
+      "1880028106020515840",
+      AppendMediaUploadRequest(media = "AAECAw==", segmentIndex = 2),
+    )
+    request.uri.toString shouldBe "/2/media/upload/1880028106020515840/append"
+    request.body.toString should include(
+      """{"media":"AAECAw==","segment_index":2}""",
+    )
+  }
+
+  it should "keep the enum of a single-member union" in {
+    val reference = decode[PostReferencedPostsInner](
+      """{"id":"20","type":"quoted"}""",
+    ).toTry.get
+    reference.`type` shouldBe PostReferencedPostsInnerEnums.`Type`.Quoted
+  }
+
+  it should "take either type when the members differ" in {
+    CreateUserBroadcastRequest(
+      Some(Json.True),
+      sourceId = "s1",
+    ).asJson.noSpaces should
+      include("\"is_low_latency\":true")
+    CreateUserBroadcastRequest(
+      Some(Json.fromString("true")),
+      sourceId = "s1",
+    ).asJson.noSpaces should
+      include("\"is_low_latency\":\"true\"")
   }
 }

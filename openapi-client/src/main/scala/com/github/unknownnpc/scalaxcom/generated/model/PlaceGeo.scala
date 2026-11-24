@@ -34,6 +34,17 @@ case class PlaceGeo(
   bbox: Seq[Double],
   /* Additional GeoJSON feature properties. */
   properties: io.circe.Json,
-  `type`: PlaceGeoType
+  /* The GeoJSON feature type. */
+  `type`: PlaceGeoEnums.`Type`
 ) derives ConfiguredDecoder, ConfiguredEncoder
 
+object PlaceGeoEnums {
+
+  type `Type` = `Type`.Value
+  object `Type` extends Enumeration {
+    val Feature = Value("Feature")
+  }
+  given Decoder[`Type`] = Decoder.decodeEnumeration(`Type`)
+  given Encoder[`Type`] = Encoder.encodeEnumeration(`Type`)
+
+}

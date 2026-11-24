@@ -28,7 +28,8 @@ object MediaUploadRequest {
 case class MediaUploadRequest(
   /* Comma-separated list of user IDs who can use this media. */
   additionalOwners: Option[String] = None,
-  media: MediaUploadRequestMedia,
+  /* The media file to upload: base64-encoded in JSON bodies, raw bytes in multipart bodies. */
+  media: String,
   /* The category of the media being uploaded. */
   mediaCategory: MediaUploadRequestEnums.MediaCategory
 ) derives ConfiguredDecoder, ConfiguredEncoder
