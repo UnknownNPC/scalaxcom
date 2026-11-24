@@ -31,6 +31,19 @@ object PostReferencedPostsInner {
 case class PostReferencedPostsInner(
   /* Unique identifier of the referenced Post. */
   id: String,
-  `type`: PostReferencedPostsInnerType
+  /* How this Post references the other Post. */
+  `type`: PostReferencedPostsInnerEnums.`Type`
 ) derives ConfiguredDecoder, ConfiguredEncoder
 
+object PostReferencedPostsInnerEnums {
+
+  type `Type` = `Type`.Value
+  object `Type` extends Enumeration {
+    val Retweeted = Value("retweeted")
+    val Quoted = Value("quoted")
+    val RepliedTo = Value("replied_to")
+  }
+  given Decoder[`Type`] = Decoder.decodeEnumeration(`Type`)
+  given Encoder[`Type`] = Encoder.encodeEnumeration(`Type`)
+
+}

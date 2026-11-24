@@ -11,6 +11,7 @@
  */
 package com.github.unknownnpc.scalaxcom.generated.model
 
+import io.circe.Json
 import io.circe.{Decoder, Encoder}
 import io.circe.derivation.{ConfiguredDecoder, ConfiguredEncoder}
 import com.github.unknownnpc.scalaxcom.generated.core.AdditionalTypeSerializers.given
@@ -26,7 +27,8 @@ object CreateUserBroadcastRequest {
     )
 }
 case class CreateUserBroadcastRequest(
-  isLowLatency: Option[CreateUserBroadcastRequestIsLowLatency] = None,
+  /* Ignored. */
+  isLowLatency: Option[io.circe.Json] = None,
   /* Ignored: the source sets the region. */
   region: Option[String] = None,
   /* The source's `rtmp_stream_key`. */

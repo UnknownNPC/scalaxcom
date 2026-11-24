@@ -28,7 +28,8 @@ object ChatMediaUploadAppendRequest {
 case class ChatMediaUploadAppendRequest(
   /* The XChat conversation the upload belongs to. */
   conversationId: String,
-  media: ChatMediaUploadAppendRequestMedia,
+  /* The media segment bytes: base64-encoded in JSON bodies, raw bytes in multipart bodies. */
+  media: String,
   /* The media hash key returned by the initialize step. */
   mediaHashKey: String,
   /* The index of this segment in the upload sequence. */

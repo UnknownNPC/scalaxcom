@@ -180,12 +180,19 @@ Spec patches, applied in order before generation (`project/*.scala`):
 1. `RequiredOnlyCompositionSpecFix`: drops `anyOf`/`oneOf` made only of
    `{required: [...]}` members ("at least one of these fields"). Otherwise the
    generator treats the schema as composed and loses its inline enums.
-2. `EnumNameClashSpecFix`: a string enum whose values collide once
+2. `ScalarCompositionSpecFix`: an `anyOf`/`oneOf` whose members are all
+   inline scalars becomes one plain schema. Otherwise the generator emits a
+   model with no fields (`AppendMediaUploadRequestMedia()`), which encodes as
+   `{}`, so the value cannot be sent. One member: that member, enum kept.
+   Same type: that type (an upload segment, `binary` or `byte`, is a `String`
+   holding the base64 text). Different types (`integer` or `string`):
+   untyped, so `io.circe.Json`.
+3. `EnumNameClashSpecFix`: a string enum whose values collide once
    camel-cased (`chat.conversation.join` vs `chat.conversation_join`) becomes a
    plain string.
-3. `OneOfSpecFix` (from masscaladon): `oneOf` required = intersection.
-4. `HeaderParamSpecFix` (from masscaladon): header params typed as strings.
-5. `SecuritySpecFix`: copies each operation's `security` scheme names into
+4. `OneOfSpecFix` (from masscaladon): `oneOf` required = intersection.
+5. `HeaderParamSpecFix` (from masscaladon): header params typed as strings.
+6. `SecuritySpecFix`: copies each operation's `security` scheme names into
    `x-security-schemes`. openapi-generator drops `OAuth2UserToken` and doesn't
    understand `UserToken` (`http` scheme `OAuth`).
 

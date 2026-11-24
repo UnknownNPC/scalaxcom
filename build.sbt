@@ -76,6 +76,7 @@ lazy val openApiClient = project.in(file("openapi-client"))
       val specFixes: Seq[String => String] =
         Seq(
           RequiredOnlyCompositionSpecFix.fix,
+          ScalarCompositionSpecFix.fix,
           EnumNameClashSpecFix.fix,
           OneOfSpecFix.fix,
           HeaderParamSpecFix.fix,
